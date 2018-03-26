@@ -10,6 +10,7 @@ const {
 const {
   User
 } = require('./models/user');
+
 const {
   Todo
 } = require('./models/todo');
@@ -120,3 +121,8 @@ app.listen(3000, () => {
 // }, (error) => {
 //   console.log(`Failed storing todo ${error}`)
 // });
+
+
+module.exports = {
+  app
+};
