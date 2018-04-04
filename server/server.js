@@ -3,45 +3,31 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 // Local modules
-const {
-  mongoose
-} = require('./db/mongoose');
-
-const {
-  User
-} = require('./models/user');
-
-const {
-  Todo
-} = require('./models/todo');
-
+const {mongoose} = require('./db/mongoose');
+const {User} = require('./models/user');
+const {Todo} = require('./models/todo');
 
 var app = express();
 
 app.use(bodyParser.json());
 
 app.post('/todos', (request, response) => {
+  console.log("POST", request.body);
 
-  console.log(request.body);
+  var todo =
+      new Todo({text : request.body.text, completed : request.body.completed})
 
-  var todo = new Todo({
-    text: request.body.text,
-    completed: request.body.completed
-  })
-
-  todo.save().then((doc) => {
-    response.send(doc);
-  }, (e) => {
-    response.status(400).send(e);
-
-  });
+  todo.save().then((doc) => { response.send(doc); },
+                   (e) => { response.status(400).send(e); });
 });
 
+app.get('/todos', (request, response) => {
+  console.log("GET ", request.body);
 
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+  Todo.find().then((todos) => { response.send({todos, test : "ok"}); },
+                   (e) => { response.status(400).send(e); });
 })
-
+app.listen(3000, () => { console.log('Started on port 3000'); })
 
 // mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost:27017/TodoApp');
@@ -54,7 +40,8 @@ app.listen(3000, () => {
 //     minLength: 1,
 //     validate: {
 //       validator: function(v) {
-//         return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+//         return
+//         /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 //         .test(v);
 //       },
 //       message: '{VALUE} is not a valid email!'
@@ -81,7 +68,6 @@ app.listen(3000, () => {
 //     default: null
 //   }
 // });
-
 
 // var newTodo = new Todo({
 //   text: 'Do something',
@@ -122,7 +108,4 @@ app.listen(3000, () => {
 //   console.log(`Failed storing todo ${error}`)
 // });
 
-
-module.exports = {
-  app
-};
+module.exports = {app};

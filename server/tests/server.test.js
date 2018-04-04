@@ -3,7 +3,7 @@ const {app} = require('./../server');
 const request = require('supertest');
 const expect = require('expect');
 
-beforeEach((done) => { Todo.remove({}).then(() => done()); })
+// beforeEach((done) => { Todo.remove({}).then(() => done()); })
 
 describe('POST /todos', () => {
   it('should create a new todo', (done) => {
