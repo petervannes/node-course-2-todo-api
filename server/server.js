@@ -1,6 +1,7 @@
 // External modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 // Local modules
 const {mongoose} = require('./db/mongoose');
@@ -25,8 +26,37 @@ app.get('/todos', (request, response) => {
   console.log("GET ", request.body);
 
   Todo.find().then((todos) => { response.send({todos, test : "ok"}); },
-                   (e) => { response.status(400).send(e); });
+                   (e) => {response.status(400).send(e)});
 })
+
+app.get('/todos/:id', (request, response) => {
+  var id = request.params.id;
+
+  console.log('ID ', id);
+  if (!ObjectID.isValid(id)) {
+    return response.status(404).send({msg : 'invalid id'});
+    console.log('Invalid ID ', id);
+  }
+  // else {
+
+  Todo.findById(id)
+      .then(
+          (todo) => {
+            if (!todo) {
+              console.log("before todo return");
+              response.status(404).send({});
+              console.log("after todo return");
+            } else {
+              response.send(todo);
+            }
+          },
+          (error) => { response.status(400).send({error}); })
+      .catch((error) => {
+        console.log("catch", error);
+        response.status(400).send({error})
+      });
+  // }
+});
 app.listen(3000, () => { console.log('Started on port 3000'); })
 
 // mongoose.Promise = global.Promise;
