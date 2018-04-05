@@ -32,7 +32,7 @@ app.get('/todos', (request, response) => {
 app.get('/todos/:id', (request, response) => {
   var id = request.params.id;
 
-  console.log('ID ', id);
+  // console.log('ID ', id);
   if (!ObjectID.isValid(id)) {
     return response.status(404).send({msg : 'invalid id'});
     console.log('Invalid ID ', id);
@@ -41,13 +41,11 @@ app.get('/todos/:id', (request, response) => {
 
   Todo.findById(id)
       .then(
-          (todo) => {
-            if (!todo) {
-              console.log("before todo return");
-              response.status(404).send({});
-              console.log("after todo return");
+          (todos) => {
+            if (!todos) {
+              return response.status(404).send({});
             } else {
-              response.send(todo);
+              response.send({todos});
             }
           },
           (error) => { response.status(400).send({error}); })
