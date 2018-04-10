@@ -8,6 +8,8 @@ const {mongoose} = require('./db/mongoose');
 const {User} = require('./models/user');
 const {Todo} = require('./models/todo');
 
+const port = process.env.PORT || 3000;
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -15,18 +17,31 @@ app.use(bodyParser.json());
 app.post('/todos', (request, response) => {
   console.log("POST", request.body);
 
-  var todo =
-      new Todo({text : request.body.text, completed : request.body.completed})
+  var todo = new Todo({
+    text: request.body.text,
+    completed: request.body.completed
+  })
 
-  todo.save().then((doc) => { response.send(doc); },
-                   (e) => { response.status(400).send(e); });
+  todo.save().then((doc) => {
+    response.send(doc);
+  },
+    (e) => {
+      response.status(400).send(e);
+    });
 });
 
 app.get('/todos', (request, response) => {
   console.log("GET ", request.body);
 
-  Todo.find().then((todos) => { response.send({todos, test : "ok"}); },
-                   (e) => {response.status(400).send(e)});
+  Todo.find().then((todos) => {
+    response.send({
+      todos,
+      test: "ok"
+    });
+  },
+    (e) => {
+      response.status(400).send(e)
+    });
 })
 
 app.get('/todos/:id', (request, response) => {
@@ -34,28 +49,40 @@ app.get('/todos/:id', (request, response) => {
 
   // console.log('ID ', id);
   if (!ObjectID.isValid(id)) {
-    return response.status(404).send({msg : 'invalid id'});
+    return response.status(404).send({
+      msg: 'invalid id'
+    });
     console.log('Invalid ID ', id);
   }
   // else {
 
   Todo.findById(id)
-      .then(
-          (todos) => {
-            if (!todos) {
-              return response.status(404).send({});
-            } else {
-              response.send({todos});
-            }
-          },
-          (error) => { response.status(400).send({error}); })
-      .catch((error) => {
-        console.log("catch", error);
-        response.status(400).send({error})
-      });
-  // }
+    .then(
+      (todos) => {
+        if (!todos) {
+          return response.status(404).send({});
+        } else {
+          response.send({
+            todos
+          });
+        }
+      },
+      (error) => {
+        response.status(400).send({
+          error
+        });
+      })
+    .catch((error) => {
+      console.log("catch", error);
+      response.status(400).send({
+        error
+      })
+    });
+// }
 });
-app.listen(3000, () => { console.log('Started on port 3000'); })
+app.listen(port, () => {
+  console.log(`Started at port ${port}`);
+})
 
 // mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost:27017/TodoApp');
@@ -136,4 +163,6 @@ app.listen(3000, () => { console.log('Started on port 3000'); })
 //   console.log(`Failed storing todo ${error}`)
 // });
 
-module.exports = {app};
+module.exports = {
+  app
+};
