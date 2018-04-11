@@ -80,6 +80,46 @@ app.get('/todos/:id', (request, response) => {
     });
 // }
 });
+
+
+app.delete('/todos/:id', (request, response) => {
+  var id = request.params.id;
+  console.log('deleting ', id)
+
+
+  if (!ObjectID.isValid(id)) {
+    return response.status(404).send({
+      msg: 'invalid id'
+    });
+    console.log('Invalid ID ', id);
+  }
+
+
+  Todo.findByIdAndRemove(id)
+    .then((todo) => {
+      if (!todo) {
+        return response.status(404).send({});
+      } else {
+        response.send({
+          todo
+        }) ;
+      }
+    }, (error) => {
+      response.status(400).send({
+        error
+      }) ;
+      console.log(">>>>error") ;
+    })
+    .catch((error) => {
+      console.log(">>>>catch", error) ;
+      response.status(400).send({
+        error
+      }) ;
+    }) ;
+})
+
+
+
 app.listen(port, () => {
   console.log(`Started at port ${port}`);
 })
