@@ -7,11 +7,14 @@ const {ObjectID} = require('mongodb');
 const testTodos = [
   {
     _id: new ObjectID(),
-    text: 'first todo'
+    text: 'first todo',
+    completed: true,
+    completedAt: 1
   },
   {
     _id: new ObjectID(),
     text: 'second todo',
+    completed: false,
     completedAt: 1234
   },
   {
@@ -173,3 +176,78 @@ describe('DELETE /todos/id:',
     })
 
   });
+
+
+describe('PATCH /todos/id:',
+  () => {
+    it('should update the todo ', (done) => {
+
+      var hexID = testTodos[1]._id.toHexString();
+
+      request(app)
+        .patch(`/todos/${hexID}`)
+        .send({
+          completed: true,
+          text: 'Finally completed it!'
+        })
+        .expect(200)
+        .expect((response) => {
+          expect(response.body.text).toBe('Finally completed it!') ;
+        })
+        .end((error, response) => {
+
+          if (error) {
+            return done(error);
+          }
+
+          Todo.findById(hexID).then((todo) => {
+            expect(todo.text).toBe('Finally completed it!');
+            expect(typeof todo.completedAt).toBe('number');
+            done()
+          }).catch((error) => done(error));
+
+        })
+
+
+    }) ;
+
+
+    it('should clear completedAt when todo is not completed ', (done) => {
+
+      // grab id
+      // set completed to false
+      // expect 200
+
+      // expect completed is false completAt is null
+
+      var hexID = testTodos[0]._id.toHexString();
+
+      request(app)
+        .patch(`/todos/${hexID}`)
+        .send({
+          completed: false
+        })
+        .expect(200)
+        .expect((response) => {
+          expect(response.body.completed).toBe(false) ;
+          expect(response.body.completedAt).toBeNull() ;
+        })
+        .end((error, response) => {
+
+          if (error) {
+            return done(error);
+          }
+
+          Todo.findById(hexID).then((todo) => {
+            expect(todo.completed).toBe(false);
+            expect(todo.completedAt).toBeNull() ;
+            done()
+          }).catch((error) => done(error));
+
+        })
+
+
+
+    }) ;
+
+  })
