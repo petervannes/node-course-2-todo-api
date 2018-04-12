@@ -1,4 +1,5 @@
 // External modules
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
@@ -118,6 +119,49 @@ app.delete('/todos/:id', (request, response) => {
     }) ;
 })
 
+
+app.patch('/todos/:id', (request, response) => {
+  var id = request.params.id;
+  console.log("Patch ", id)
+  var body = _.pick(request.body, ['text', 'completed']);
+
+  if (!ObjectID.isValid(id)) {
+    return response.status(404).send({
+      msg: 'invalid id'
+    });
+    console.log('Invalid ID ', id);
+  }
+
+
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime() ;
+  } else {
+    body.completed = false ;
+    body.completedAt = null ;
+  }
+
+
+  Todo.findByIdAndUpdate(id, {
+    $set: body
+  }, {
+    new: true
+  })
+    .then((todo) => {
+
+      if (!todo) {
+        return response.status(404).send()
+      }
+
+      response.send(todo);
+    })
+    .catch((error) => {
+      response.status(400).send() ;
+    })
+
+
+
+
+}) ;
 
 
 app.listen(port, () => {
