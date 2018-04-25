@@ -1,0 +1,29 @@
+{ ValidationError: User validation failed: password: Path `password` (`aaa`) is shorter than the minimum allowed length (6).
+    at ValidationError.inspect (/Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/error/validation.js:56:24)
+    at formatValue (util.js:418:38)
+    at inspect (util.js:307:10)
+    at format (util.js:169:12)
+    at Console.log (console.js:133:21)
+    at user.save.then (/Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/server/server.js:175:15)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:182:7)
+  errors:
+   { password:
+      { ValidatorError: Path `password` (`aaa`) is shorter than the minimum allowed length (6).
+    at new ValidatorError (/Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/error/validator.js:25:11)
+    at validate (/Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/schematype.js:805:13)
+    at /Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/schematype.js:854:11
+    at Array.forEach (<anonymous>)
+    at SchemaString.SchemaType.doValidate (/Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/schematype.js:814:19)
+    at /Users/petervannes/Documents/Zakelijk/Projects/The complete Node.js Dev. Course/Section 8/Section 8/node-todo-api/node_modules/mongoose/lib/document.js:1621:9
+    at process._tickCallback (internal/process/next_tick.js:176:11)
+        message: 'Path `password` (`aaa`) is shorter than the minimum allowed length (6).',
+        name: 'ValidatorError',
+        properties: [Object],
+        kind: 'minlength',
+        path: 'password',
+        value: 'aaa',
+        reason: undefined,
+        '$isValidatorError': true } },
+  _message: 'User validation failed',
+  name: 'ValidationError' }

@@ -153,7 +153,6 @@ app.patch('/todos/:id', (request, response) => {
       if (!todo) {
         return response.status(404).send()
       }
-
       response.send(todo);
     })
     .catch((error) => {
@@ -161,10 +160,26 @@ app.patch('/todos/:id', (request, response) => {
     })
 
 
-
-
 }) ;
 
+app.post('/users', (request, response) => {
+  console.log("POST", request.body);
+
+  var body = _.pick(request.body, ['email', 'password']);
+  var user = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  // response.send(user);
+  }).then((token) => {
+    response.header('x-auth', token).send(user)
+  }).catch((e) => {
+    console.log(JSON.stringify(e, undefined, 4));
+    console.log(Object.keys(e));
+    console.log(e);
+    response.status(400).send(_.values(_.pick(e, ['errors.email.message', 'errors.password.message', 'errmsg']))) ;
+  });
+});
 
 app.listen(port, () => {
   console.log(`Started at port ${port}`);
