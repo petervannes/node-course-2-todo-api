@@ -10,6 +10,7 @@ const {ObjectID} = require('mongodb');
 const {mongoose} = require('./db/mongoose');
 const {User} = require('./models/user');
 const {Todo} = require('./models/todo');
+const {authenticate} = require('./middleware/authenticate');
 
 const port = process.env.PORT;
 
@@ -168,22 +169,46 @@ app.post('/users', (request, response) => {
   var body = _.pick(request.body, ['email', 'password']);
   var user = new User(body);
 
-  user.save().then(() => {
-    return user.generateAuthToken();
-  // response.send(user);
-  }).then((token) => {
-    response.header('x-auth', token).send(user)
-  }).catch((e) => {
-    console.log(JSON.stringify(e, undefined, 4));
-    console.log(Object.keys(e));
-    console.log(e);
+  console.log(":::" + user);
+  // user.save().then(() => {
+  //   return user.generateAuthToken();
+  // // response.send(user);
+  // }).then((token) => {
+  //   response.header('x-auth', token).send(user)
+  // }).catch((e) => {
+  //   console.log(JSON.stringify(e, undefined, 4));
+  //   console.log(Object.keys(e));
+  //   console.log(e);
+  //   response.status(400).send(_.values(_.pick(e, ['errors.email.message', 'errors.password.message', 'errmsg']))) ;
+  // });
+
+
+  // improved and more efficient way of storing the object and creating the token.
+  user.generateAuthToken()
+    .then((token) => {
+      response.header('x-auth', token).send(user)
+    }).catch((e) => {
+    // console.log(JSON.stringify(e, undefined, 4));
+    // console.log(Object.keys(e));
+    // console.log(e);
     response.status(400).send(_.values(_.pick(e, ['errors.email.message', 'errors.password.message', 'errmsg']))) ;
   });
 });
 
+
+
+
+
+app.get('/users/me', authenticate, (request, response) => {
+
+  response.send(request.user);
+})
+
 app.listen(port, () => {
   console.log(`Started at port ${port}`);
 })
+
+
 
 // mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost:27017/TodoApp');
