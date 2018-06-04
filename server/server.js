@@ -19,7 +19,7 @@ var app = express();
 app.use(bodyParser.json());
 
 app.post('/todos', (request, response) => {
-  console.log("POST", request.body);
+  // console.log("POST", request.body);
 
   var todo = new Todo({
     text: request.body.text,
@@ -35,7 +35,7 @@ app.post('/todos', (request, response) => {
 });
 
 app.get('/todos', (request, response) => {
-  console.log("GET ", request.body);
+  // console.log("GET ", request.body);
 
   Todo.find().then((todos) => {
     response.send({
@@ -56,7 +56,7 @@ app.get('/todos/:id', (request, response) => {
     return response.status(404).send({
       msg: 'invalid id'
     });
-    console.log('Invalid ID ', id);
+  // console.log('Invalid ID ', id);
   }
   // else {
 
@@ -77,7 +77,7 @@ app.get('/todos/:id', (request, response) => {
         });
       })
     .catch((error) => {
-      console.log("catch", error);
+      // console.log("catch", error);
       response.status(400).send({
         error
       })
@@ -88,14 +88,14 @@ app.get('/todos/:id', (request, response) => {
 
 app.delete('/todos/:id', (request, response) => {
   var id = request.params.id;
-  console.log('deleting ', id)
+  // console.log('deleting ', id)
 
 
   if (!ObjectID.isValid(id)) {
     return response.status(404).send({
       msg: 'invalid id'
     });
-    console.log('Invalid ID ', id);
+  // console.log('Invalid ID ', id);
   }
 
 
@@ -112,10 +112,10 @@ app.delete('/todos/:id', (request, response) => {
       response.status(400).send({
         error
       }) ;
-      console.log(">>>>error") ;
+    // console.log(">>>>error") ;
     })
     .catch((error) => {
-      console.log(">>>>catch", error) ;
+      // console.log(">>>>catch", error) ;
       response.status(400).send({
         error
       }) ;
@@ -125,14 +125,14 @@ app.delete('/todos/:id', (request, response) => {
 
 app.patch('/todos/:id', (request, response) => {
   var id = request.params.id;
-  console.log("Patch ", id)
+  // console.log("Patch ", id)
   var body = _.pick(request.body, ['text', 'completed']);
 
   if (!ObjectID.isValid(id)) {
     return response.status(404).send({
       msg: 'invalid id'
     });
-    console.log('Invalid ID ', id);
+  // console.log('Invalid ID ', id);
   }
 
 
@@ -164,12 +164,12 @@ app.patch('/todos/:id', (request, response) => {
 }) ;
 
 app.post('/users', (request, response) => {
-  console.log("POST", request.body);
+  // console.log("POST", request.body);
 
   var body = _.pick(request.body, ['email', 'password']);
   var user = new User(body);
 
-  console.log(":::" + user);
+  // console.log(":::" + user);
   // user.save().then(() => {
   //   return user.generateAuthToken();
   // // response.send(user);

@@ -73,9 +73,9 @@ UserSchema.statics.findByToken = function(token) {
 
   try {
     decoded = jwt.verify(token, 'abcd123') ;
-    console.log(`Decoded token ${JSON.stringify(decoded, undefined, 2)}`);
+  // console.log(`Decoded token ${JSON.stringify(decoded, undefined, 2)}`);
   } catch (error) {
-    console.log('findByToken error ', error);
+    // console.log('findByToken error ', error);
     return Promise.reject();
   // return new Promise((resolve, reject) => {
   //   reject() ;
